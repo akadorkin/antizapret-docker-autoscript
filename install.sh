@@ -1,35 +1,35 @@
 #!/bin/bash
 
-# Обновляем систему и устанавливаем последние версии пакетов
-echo "Обновляем систему..."
-sudo apt update -y && sudo apt upgrade -y
+# Update the system and install the latest package versions
+echo "Updating the system..."
+sudo apt update -y > /dev/null 2>&1 && sudo apt upgrade -y > /dev/null 2>&1
 
-# Устанавливаем необходимые пакеты
-echo "Устанавливаем efivar..."
-sudo apt install -y efivar
+# Install required packages
+echo "Installing efivar..."
+sudo apt install -y efivar > /dev/null 2>&1
 
-echo "Устанавливаем OpenVPN..."
-sudo apt install -y openvpn
+echo "Installing OpenVPN..."
+sudo apt install -y openvpn > /dev/null 2>&1
 
-echo "Устанавливаем OpenVPN DKMS..."
-sudo apt install -y openvpn-dco-dkms
+echo "Installing OpenVPN DKMS..."
+sudo apt install -y openvpn-dco-dkms > /dev/null 2>&1
 
-# Устанавливаем Docker
-echo "Устанавливаем Docker..."
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
+# Install Docker
+echo "Installing Docker..."
+curl -fsSL https://get.docker.com -o get-docker.sh > /dev/null 2>&1
+sudo sh get-docker.sh > /dev/null 2>&1
 rm get-docker.sh
 
-# Клонируем репозиторий antizapret-vpn-docker
-echo "Клонируем репозиторий antizapret-vpn-docker..."
-git clone https://github.com/xtrime-ru/antizapret-vpn-docker.git antizapret
+# Clone the antizapret-vpn-docker repository
+echo "Cloning the antizapret-vpn-docker repository..."
+sudo git clone https://github.com/xtrime-ru/antizapret-vpn-docker.git /root/antizapret > /dev/null 2>&1
 
-# Переходим в директорию antizapret
-cd antizapret
+# Navigate to the antizapret directory
+cd /root/antizapret
 
-# Создаём файл docker-compose.override.yml с необходимым содержимым
-echo "Создаём файл docker-compose.override.yml..."
-cat <<EOL > docker-compose.override.yml
+# Create the docker-compose.override.yml file with the necessary content
+echo "Creating docker-compose.override.yml..."
+cat <<EOL > /root/antizapret/docker-compose.override.yml
 services:
   antizapret-vpn:
     environment:
@@ -41,7 +41,6 @@ services:
       - SKIP_UPDATE_FROM_ZAPRET=false
       - UPDATE_TIMER=1d
       - OPENVPN_PORT=6841
-      - OPENVPN_HOST=me.omhvp.co
       - OPENVPN_MTU=1420
     ports:
       - "6841:1194/tcp"
@@ -69,44 +68,36 @@ services:
       service: amnezia-wg-easy
 EOL
 
-# Выполняем docker compose pull
-echo "Выполняем docker compose pull..."
-sudo docker compose pull
+# Create an empty wireguard.env file
+echo "Creating an empty wireguard.env file..."
+sudo touch /root/antizapret/wireguard/wireguard.env
 
-# Запускаем контейнеры в фоне
-echo "Запускаем контейнеры..."
-sudo docker compose up -d
+# Perform docker compose pull
+echo "Pulling Docker images..."
+sudo docker compose pull > /dev/null 2>&1
 
-# Меняем содержимое файлов в папке antizapret
-echo "Изменяем файлы конфигурации..."
+# Start the containers
+echo "Starting containers..."
+sudo docker compose up -d > /dev/null 2>&1
 
-# Пример, как изменить файлы, указываю на замену:
-echo "Изменение include-hosts-custom.txt..."
-cat <<EOL > antizapret/config/include-hosts-custom.txt
-# Пример содержимого
-example.com
-another-example.com
-EOL
+# Download and replace configuration files
+echo "Downloading configuration files..."
 
-echo "Изменение include-ips-custom.txt..."
-cat <<EOL > antizapret/config/iinclude-ips-custom.txt
-# Пример содержимого
-192.168.1.1
-10.0.0.1
-EOL
+echo "Downloading include-hosts-custom.txt..."
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-hosts-custom.txt?token=GHSAT0AAAAAAC2ROUXKFZRQ34KOQPRYUH4AZZ2IVQA" \
+     -o /root/antizapret/config/include-hosts-custom.txt > /dev/null 2>&1
 
-echo "Изменение include-regex-custom.txt..."
-cat <<EOL > antizapret/config/include-regex-custom.txt
-# Пример содержимого
-^.*\.example\.com$
-EOL
+echo "Downloading include-ips-custom.txt..."
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-ips-custom.txt?token=GHSAT0AAAAAAC2ROUXK5DTWPO6LIRJPSNUQZZ2IVRA" \
+     -o /root/antizapret/config/include-ips-custom.txt > /dev/null 2>&1
 
-# Перезапускаем контейнеры
-echo "Перезапускаем контейнеры..."
-sudo docker compose restart
+echo "Downloading include-regex-custom.txt..."
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-regex-custom.txt?token=GHSAT0AAAAAAC2ROUXK7MAPBFBMPKL3MIHKZZ2IVSA" \
+     -o /root/antizapret/config/include-regex-custom.txt > /dev/null 2>&1
 
-# Выводим путь к файлу .ovpn
-echo "Выводим файл .ovpn..."
-cat antizapret/keys/client/antizapret-client-udp.ovpn
+# Restart the containers
+echo "Restarting containers..."
+sudo docker compose restart > /dev/null 2>&1
 
-echo "Установка и настройка завершены."
+# Final message
+echo "All done. The system is ready!"
