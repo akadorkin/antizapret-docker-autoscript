@@ -84,15 +84,15 @@ sudo docker compose up -d > /dev/null 2>&1
 echo "Downloading configuration files..."
 
 echo "Downloading include-hosts-custom.txt..."
-curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-hosts-custom.txt?token=GHSAT0AAAAAAC2ROUXKFZRQ34KOQPRYUH4AZZ2IVQA" \
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-hosts-custom.txt" \
      -o /root/antizapret/config/include-hosts-custom.txt > /dev/null 2>&1
 
 echo "Downloading include-ips-custom.txt..."
-curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-ips-custom.txt?token=GHSAT0AAAAAAC2ROUXK5DTWPO6LIRJPSNUQZZ2IVRA" \
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-ips-custom.txt" \
      -o /root/antizapret/config/include-ips-custom.txt > /dev/null 2>&1
 
 echo "Downloading include-regex-custom.txt..."
-curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-regex-custom.txt?token=GHSAT0AAAAAAC2ROUXK7MAPBFBMPKL3MIHKZZ2IVSA" \
+curl -fsSL "https://raw.githubusercontent.com/akadorkin/antizapret-docker-autoscript/refs/heads/main/include-regex-custom.txt" \
      -o /root/antizapret/config/include-regex-custom.txt > /dev/null 2>&1
 
 # Restart the containers
