@@ -20,6 +20,8 @@ curl -fsSL https://get.docker.com -o get-docker.sh > /dev/null 2>&1
 sudo sh get-docker.sh > /dev/null 2>&1
 rm get-docker.sh
 
+
+
 # Clone the antizapret-vpn-docker repository
 echo "Cloning the antizapret-vpn-docker repository..."
 sudo git clone https://github.com/xtrime-ru/antizapret-vpn-docker.git /root/antizapret > /dev/null 2>&1
