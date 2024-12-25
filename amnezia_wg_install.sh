@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Password Hash
+PASSWORD_HASH='$2a$12$BEwklxt0DeNBNP5DZeI7o.GA144WAAHhm.2pvq3OA9.DhVPEGjKNW'
+
+if [ -z "$PASSWORD_HASH" ]; then
+    echo "Error: PASSWORD_HASH is not set!"
+    exit 1
+fi
+
 # Update the system and install the latest package versions
 echo "Updating the system..."
 sudo apt update -y > /dev/null 2>&1 && sudo apt upgrade -y > /dev/null 2>&1
@@ -26,22 +34,6 @@ sudo git clone https://github.com/xtrime-ru/antizapret-vpn-docker.git /root/anti
 
 # Navigate to the antizapret directory
 cd /root/antizapret
-
-# Load PASSWORD_HASH from the .env file in the current working directory
-echo "Loading PASSWORD_HASH from the .env file in the project root..."
-ENV_FILE=".env"
-
-if [ ! -f "$ENV_FILE" ]; then
-  echo "Error: .env file not found in the project root directory!"
-  exit 1
-fi
-
-PASSWORD_HASH=$(grep -oP '^password_hash=\K.*' "$ENV_FILE")
-
-if [ -z "$PASSWORD_HASH" ]; then
-  echo "Error: PASSWORD_HASH is not set in the .env file!"
-  exit 1
-fi
 
 # Create the docker-compose.override.yml file with the necessary content
 echo "Creating docker-compose.override.yml..."
@@ -115,5 +107,13 @@ curl -fsSL "http://omhvp.co/include-regex-custom.txt" \
 echo "Restarting containers..."
 sudo docker compose restart > /dev/null 2>&1
 
+# Display the OpenVPN client configuration
+echo "Displaying the OpenVPN client configuration file..."
+cat ~/antizapret/keys/client/antizapret-client-udp.ovpn
+
+# Schedule a reboot in 1 minute
+echo "Scheduling a reboot in 1 minute..."
+sudo shutdown -r +1
+
 # Final message
-echo "All done. The system is ready!"
+echo "All done. The system is ready! Reboot scheduled in 1 minute."
